@@ -1,6 +1,11 @@
 import React, {useEffect, useState} from 'react';
 import {getLocations} from "./utils/getLocations";
+import {
+    KeyboardArrowUp as ArrowUp,
+    KeyboardArrowDown as ArrowDown
+} from '@mui/icons-material';
 import './App.css'
+
 // https://randomuser.me/api/?results=10
 
 export type Location = any
@@ -14,13 +19,14 @@ enum SortingDirection {
 
 
 const checkSortDirection = (sortDir: SortingDirection) => {
-    if(sortDir === SortingDirection.ASC) {
+    if(sortDir === SortingDirection.DEF) {
+        return SortingDirection.ASC
+    } else if(sortDir === SortingDirection.ASC) {
         return SortingDirection.DESC
     } else if(sortDir === SortingDirection.DESC) {
         return SortingDirection.DEF
-    } else {
-        return SortingDirection.ASC
     }
+    return SortingDirection.DEF
 }
 
 function App() {
@@ -85,24 +91,28 @@ function App() {
     return (
         <div className="App">
             <input type='text' value={search} className='input-field' onChange={onSearch} />
-            <table>
-                <thead>
-                <tr>
-                    {headers.map((header, index) => (
-                        <th style={{cursor: 'pointer'}} onClick={() => sortLocations(header)} key={index}>{header}</th>
-                    ))}
-                </tr>
-                </thead>
-                <tbody>
-                {locations.map((location, index) => (
-                    <tr key={index}>
-                        {Object.keys(location).map((key, index) => (
-                            <td key={index}>{location[key]}</td>
+            <div className='wrapper'>
+                {sortingDirection === SortingDirection.ASC && <ArrowUp />}
+                {sortingDirection === SortingDirection.DESC && <ArrowDown />}
+                <table>
+                    <thead>
+                    <tr>
+                        {headers.map((header, index) => (
+                            <th style={{cursor: 'pointer'}} onClick={() => sortLocations(header)} key={index}>{header}</th>
                         ))}
                     </tr>
-                ))}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                    {locations.map((location, index) => (
+                        <tr key={index}>
+                            {Object.keys(location).map((key, index) => (
+                                <td key={index}>{location[key]}</td>
+                            ))}
+                        </tr>
+                    ))}
+                    </tbody>
+                </table>
+            </div>
         </div>
     );
 }
