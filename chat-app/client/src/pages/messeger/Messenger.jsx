@@ -15,6 +15,7 @@ const Messenger = () => {
     const [newMessage, setNewMessage] = useState('');
     const [socket, setSocket] = useState(null);
     const [arrivalMessage, setArrivalMessage] = useState(null);
+    const [onlineUsers, setOnlineUsers] = useState([]);
     const {user} = useContext(AuthContext);
 
     const socketRef = useRef(io("ws://localhost:8900"));
@@ -41,21 +42,13 @@ const Messenger = () => {
     useEffect(() => {
         socketRef.current.emit("addUser", user._id)
         socketRef.current.on("getUsers", (users) => {
-            console.log(users);
+            setOnlineUsers(user.followings.filter(f => users.some(u => u.userId === f)))
         })
     }, [user]);
 
-
-    useEffect(() => {
-        socket?.on("welcome", (message) => {
-            console.log(message);
-        })
-    }, [socket]);
-
-
-    useEffect(() => {
-        setSocket(io("ws://localhost:8900"));
-    }, [])
+    // useEffect(() => {
+    //     setSocket(io("ws://localhost:8900"));
+    // }, [])
 
     useEffect(() => {
         const getConversations = async () => {
@@ -71,9 +64,8 @@ const Messenger = () => {
 
     useEffect(() => {
         const getMessages = async () => {
-            console.log(currentChat);
             try {
-                const res = await axios.get("/messages/" + currentChat);
+                const res = await axios.get("/messages/" + currentChat._id);
                 setMessages(res.data);
             } catch (err) {
                 console.log(err);
@@ -82,11 +74,12 @@ const Messenger = () => {
         getMessages();
     }, [currentChat])
 
-    const sendMessage = async () => {
+    const sendMessage = async (e) => {
+        e.preventDefault();
         const message = {
             sender: user._id,
             text: newMessage,
-            conversationId: currentChat
+            conversationId: currentChat?._id
         };
 
         const receiverId = currentChat?.members.find((m) => m !== user._id);
@@ -120,8 +113,8 @@ const Messenger = () => {
                     <div className="chatMenuWrapper">
                         <input placeholder="Search for a friends" className='chatMenuInput'/>
                         {conversations && conversations.map((c) => (
-                            <div onClick={() => setCurrentChat(c._id)}>
-                                <Conversation key={c._id} conversation={c}
+                            <div key={c._id} onClick={() => setCurrentChat(c)}>
+                                <Conversation conversation={c}
                                               currentUser={user}/>
                             </div>
                         ))}
@@ -156,7 +149,7 @@ const Messenger = () => {
                 </div>
                 <div className="chatOnline">
                     <div className="chatOnlineWrapper">
-                        <ChatOnline/>
+                        <ChatOnline onlineUsers={onlineUsers} currentId={user._id} setCurrentChat={setCurrentChat}/>
                     </div>
                 </div>
             </div>
