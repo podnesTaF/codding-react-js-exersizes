@@ -11,9 +11,8 @@ import {io} from "socket.io-client";
 const Messenger = () => {
     const [conversations, setConversations] = useState([]);
     const [currentChat, setCurrentChat] = useState(null);
-    const [messages, setMessages] = useState([]);
+    const [messages, setMessages]   = useState([]);
     const [newMessage, setNewMessage] = useState('');
-    const [socket, setSocket] = useState(null);
     const [arrivalMessage, setArrivalMessage] = useState(null);
     const [onlineUsers, setOnlineUsers] = useState([]);
     const {user} = useContext(AuthContext);
@@ -46,14 +45,11 @@ const Messenger = () => {
         })
     }, [user]);
 
-    // useEffect(() => {
-    //     setSocket(io("ws://localhost:8900"));
-    // }, [])
-
     useEffect(() => {
         const getConversations = async () => {
             try {
                 const res = await axios.get("/conversations/" + user._id);
+                console.log(res.data)
                 setConversations(res.data);
             } catch (err) {
                 console.log(err);
@@ -103,6 +99,8 @@ const Messenger = () => {
     useEffect(() => {
        scrollRef.current?.scrollIntoView({behavior: 'smooth'})
     }, [messages])
+
+
     
 
     return (
