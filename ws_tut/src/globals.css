@@ -1,0 +1,32 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.wrapper {
+    display: flex;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+    width: 50%;
+    margin: 0 auto;
+    overflow-y: hidden;
+}
+
+.messages {
+    height: 80vh;
+    width: 100%;
+    overflow-y: scroll;
+}
+
+.chat {
+    width: 100%;
+}
+
+.avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
