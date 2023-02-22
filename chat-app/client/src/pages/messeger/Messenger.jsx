@@ -8,6 +8,9 @@ import axios from "axios";
 import {AuthContext} from "../../context/AuthContext";
 import {io} from "socket.io-client";
 
+
+const ws = new WebSocket('ws://localhost:8900');
+
 const Messenger = () => {
     const [conversations, setConversations] = useState([]);
     const [currentChat, setCurrentChat] = useState(null);
@@ -17,16 +20,15 @@ const Messenger = () => {
     const [onlineUsers, setOnlineUsers] = useState([]);
     const {user} = useContext(AuthContext);
 
-    const socketRef = useRef(io("ws://localhost:8900"));
+    // const socketRef = useRef(io("ws://localhost:8900"));
     const scrollRef = useRef();
 
     useEffect(() => {
-        socketRef.current = io("ws://localhost:8900");
-
-        socketRef.current.on("getMessage", (data) => {
+        ws.addEventListener("getMessage", (e) => {
+            console.log(e.data)
             setArrivalMessage({
-                sender: data.senderId,
-                text: data.text,
+                sender: e.data.senderId,
+                text: e.data.text,
                 createdAt: Date.now()
             })
         })
@@ -39,7 +41,7 @@ const Messenger = () => {
 
 
     useEffect(() => {
-        socketRef.current.emit("addUser", user._id)
+        ws.send(user._id)
         socketRef.current.on("getUsers", (users) => {
             setOnlineUsers(user.followings.filter(f => users.some(u => u.userId === f)))
         })
@@ -61,8 +63,8 @@ const Messenger = () => {
     useEffect(() => {
         const getMessages = async () => {
             try {
-                const res = await axios.get("/messages/" + currentChat._id);
-                setMessages(res.data);
+                const res = currentChat && await axios.get("/messages/" + currentChat._id);
+                setMessages(res?.data);
             } catch (err) {
                 console.log(err);
             }

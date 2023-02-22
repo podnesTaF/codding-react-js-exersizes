@@ -30,7 +30,8 @@ const Messages: React.FC = () => {
     const [messages, setMessages] = useState<ChatMessageType[]>([])
 
     useEffect(() => {
-        ws.addEventListener('message', (e) => {
+        ws.addEventListener('getMessage', (e: any) => {
+            console.log(e.data)
             setMessages((prevMessages) => [...prevMessages, ...JSON.parse(e.data)])
             console.log(JSON.parse(e.data))
         })
@@ -72,7 +73,7 @@ const AddMessageForm: React.FC = () => {
                 <textarea onChange={(e) => setMessage(e.target.value)} value={message}></textarea>
             </div>
             <div>
-                <button onClick={sendMessage}>Send</button>
+                <button disabled={ws.readyState !== WebSocket.OPEN} onClick={sendMessage}>Send</button>
             </div>
         </div>
     )
