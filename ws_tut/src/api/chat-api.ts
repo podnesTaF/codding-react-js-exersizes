@@ -40,9 +40,9 @@ export const chatApi = {
             subscribers = subscribers.filter(s => s !== callback)
         }
     },
-    unsubscribe(callback: subscriberType) {
-        subscribers = subscribers.filter(s => s !== callback)
-    },
+        unsubscribe(callback: subscriberType) {
+            subscribers = subscribers.filter(s => s !== callback)
+        },
     sendMessage(message: string) {
         ws?.send(message)
     }

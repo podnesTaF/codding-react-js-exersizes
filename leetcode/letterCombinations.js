@@ -12,17 +12,21 @@ const combinations = [
 ];
 
 var letterCombinations = function (digits) {
-  let final = [];
-  let number = digits;
-  let i = 0;
-  while (number.length > 0) {
-    const currArr = combinations[+number[i] - 2];
-    number.slice(i + 1);
-    currArr.reduce(
-      (acc, curr, i) => acc.push(curr + combinations[+number[0] - 2][i]),
-      []
-    );
+  if (!digits) return [];
+  let res = [];
+  const first = combinations[+digits[0] - 2];
+  for (let k = 0; k < first.length; k++) {
+    if (digits.length <= 1) res.push(first[k]);
+    for (let i = 0; i < digits.length; i++) {
+      const currLetComb = letterCombinations(digits.slice(1));
+      for (let j = 0; j < currLetComb.length; j++) {
+        if (!res.includes(first[k] + currLetComb[j])) {
+          res.push(first[k] + currLetComb[j]);
+        }
+      }
+    }
   }
+  return res;
 };
 
-console.log(letterCombinations('24'));
+console.log(letterCombinations('23456789'));
