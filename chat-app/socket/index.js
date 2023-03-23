@@ -6,18 +6,18 @@ const io = require('socket.io')(8900, {
 
 let users = []
 
-const addUser = (userId, socketId) => {
-!users.some(user => user.userId === userId) && users.push({ userId, socketId })
+const addUser = (newUser, socketId) => {
+!users.some(user => user.id === newUser.id) && users.push({ ...newUser, socketId })
 }
 
 const getUser = (userId) => {
-return users.find(user => user.userId === userId)
+return users.find(user => user.id === userId)
 }
 
 io.on('connection', socket => {
     console.log('User connected')
-    socket.on("addUser", userId => {
-        addUser(userId, socket.id)
+    socket.on("addUser", user => {
+        addUser(user, socket.id)
         io.emit("getUsers", users)
     })
 

@@ -9,7 +9,7 @@ import {AuthContext} from "../../context/AuthContext";
 import {io} from "socket.io-client";
 
 
-const ws = new WebSocket('ws://localhost:8900');
+// const ws = new WebSocket('ws://localhost:8900');
 
 const Messenger = () => {
     const [conversations, setConversations] = useState([]);
@@ -20,7 +20,7 @@ const Messenger = () => {
     const [onlineUsers, setOnlineUsers] = useState([]);
     const {user} = useContext(AuthContext);
 
-    // const socketRef = useRef(io("ws://localhost:8900"));
+    const socketRef = useRef(io("ws://localhost:8900"));
     const scrollRef = useRef();
 
     useEffect(() => {
@@ -114,7 +114,7 @@ const Messenger = () => {
                         <input placeholder="Search for a friends" className='chatMenuInput'/>
                         {conversations && conversations.map((c) => (
                             <div key={c._id} onClick={() => setCurrentChat(c)}>
-                                <Conversation conversation={c}
+                                    <Conversation conversation={c}
                                               currentUser={user}/>
                             </div>
                         ))}

@@ -1,5 +1,12 @@
 /** @format */
 
+const grid = [
+  ['1', '1', '1', '1', '0'],
+  ['1', '1', '0', '1', '0'],
+  ['1', '1', '0', '0', '0'],
+  ['0', '0', '0', '0', '0'],
+];
+
 const numberOfIslands = (grid) => {
   let result = 0;
 
@@ -21,4 +28,6 @@ const numberOfIslands = (grid) => {
       }
     }
   }
+
+  return result;
 };
