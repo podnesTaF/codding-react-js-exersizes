@@ -1,24 +1,28 @@
 /** @format */
 
+
+const getDrome = (l, r, s) => {
+  while(l >= 0 && right < s.length) {
+    if(s[l] !== s[r]) break
+    left--
+    right++
+  }
+
+  return [left + 1, right] 
+}
+
 const longestPalindrome = (s) => {
-  let longest = '';
-  if (s.length === 1) {
-    return s;
+  let max = [0, 1]
+
+  for(let i = 0; i < s.length; i++) {
+    let even = getDrome(i - 1, i, s)
+    let odd = getDrome(i - 1, i + 1, s)
+    let currMax = odd[1] - odd[0] > even[1] - even[0] ? odd : even
+
+    max = max[1] - max[0] > currMax[1] - currMax[0] ? max : currMax
   }
-  for (let i = 0; i < s.length - 1; i++) {
-    let j = i + 1;
-    let currStr = s[i];
-    let reversedStr = currStr;
-    while (j < s.length) {
-      currStr += s[j];
-      reversedStr = s[j] + reversedStr;
-      if (currStr === reversedStr && longest.length < currStr.length) {
-        longest = currStr;
-      }
-      j++;
-    }
-  }
-  return longest;
+
+  return s.slice(max[0], max[1])
 };
 
 console.log(longestPalindrome('babab'));
