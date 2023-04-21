@@ -1,20 +1,24 @@
 /** @format */
 
 const lengthOfLongestSubstring = (s) => {
-  let longest = 0;
-  for (let i = 0; i < s.length; i++) {
-    let j = i + 1;
-    const curr = [s[i]];
-    while (s.length > j && !curr.includes(s[j])) {
-      curr.push(s[j]);
-      j += 1;
-    }
-    j = i + 1;
-    if (longest < curr.length) {
-      longest = curr.length;
+  let longest = 0
+  let currArr = []
+
+  for(char of s) {
+    if(!s.includes(char)){
+      currArr.push(char)
+    } else {
+      if(currArr.length > longest) {
+        longest = currArr.length
+      }
+
+      currArr = currArr.slice(currArr.indexOf(char) + 1)
+      currArr.push(char)
     }
   }
-  return longest;
+
+if(currArr.length > longest) longest = currArr.length
+return longest
 };
 
 const start = new Date().getTime();
