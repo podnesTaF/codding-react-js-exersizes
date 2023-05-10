@@ -7,37 +7,25 @@ const zigzagLevelOrder = (root) => {
 
   let output = [];
   let queue = [root];
-  let isZig = true;
+  let count = 0
 
   while (queue.length) {
-    let temp = [];
-    let temp2 = [];
-    while (queue.length) {
-      let current = queue.shift();
-
-      console.log(current.val);
-
-      temp2.push(current.val);
-
-      if (current.right) {
-        temp.push(current.right);
-      }
-
-      if (current.left) {
-        temp.push(current.left);
-      }
-    }
-    if (isZig) {
-      temp2.reverse();
+    let len = queue.length
+    if(count % 2 === 0) {
+      output.push(queue.map(node => node.val))
+    } else {
+      output.push(queue.map(node => node.val).reverse())
+      count++
     }
 
-    isZig = !isZig;
-
-    queue = temp;
-
-    output.push(temp2);
+    while(len--) {
+      let node = queue.shift()
+      if(node.left) {
+        queue.push(node.left)
+    } 
+    if(node.right) queue.push(node.right)
+    }
   }
   return output;
 };
 
-console.log(zigzagLevelOrder([3, 9, 20, null, null, 15, 7]));
